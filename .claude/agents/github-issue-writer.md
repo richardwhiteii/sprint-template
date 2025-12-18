@@ -80,22 +80,34 @@ Extract:
 
 ### Step 3: Generate Issue Body
 
-Create rich issue body with this structure:
+Create rich, AI-implementation-ready issue body using this comprehensive template:
 
 ```markdown
+# [TICKET-ID]: [Component Name] [Feature Description]
+
 ## Quick Info
 
 | Field | Value |
 |-------|-------|
-| **Points** | [N]pt |
+| **Points** | [N]pt (1=simple, 2=moderate, 3=complex) |
 | **Phase** | Phase [N]: [Name] |
 | **Worktree** | `feat-[XXX]/` |
 | **Dependencies** | #[N], #[M] or None |
 | **Parallel With** | #[P] or — |
+| **Component** | [System Component] |
+| **Priority** | [High/Medium/Low] |
 
 ## Objective
 
-[Single paragraph from punchlist phase objective, scoped to this ticket]
+[Single paragraph clearly stating what this ticket accomplishes and why it's important. Must be specific enough that an AI can understand the exact goal.]
+
+## Context
+
+[2-3 paragraphs providing business and technical context:]
+- Current system state and what's missing
+- How this ticket fits into the larger system architecture
+- Connection to mission objectives
+- Technical dependencies and integration points
 
 ## Git Workflow
 
@@ -142,16 +154,9 @@ git merge origin/test
 git tag vX.Y.Z && git push origin main --tags
 ```
 
-## Acceptance Criteria
-
-- [ ] [Task from punchlist, converted to testable criterion]
-- [ ] [Another task, simplified from Given-When-Then]
-- [ ] [Tests written and passing]
-- [ ] [Integration verified]
-
 ## Selected Implementation Approach
 
-[One paragraph: Chosen technical approach and why it was selected over alternatives.]
+[One paragraph explaining the chosen technical approach and why it was selected over alternatives. Provides AI agent with clear direction on implementation strategy.]
 
 ## Key Decisions
 
@@ -159,10 +164,11 @@ git tag vX.Y.Z && git push origin main --tags
 |----------|--------|------------------------|-----------|
 | [Architecture] | [Choice] | [Alt 1], [Alt 2] | [Why this choice] |
 | [Integration] | [Choice] | [Alt 1], [Alt 2] | [Why this choice] |
+| [Pattern] | [Choice] | [Alt 1], [Alt 2] | [Why this choice] |
 
 ## AI Implementation Prompt
 
-> **You are implementing [FEATURE NAME] for [SYSTEM NAME].**
+> **You are implementing [FEATURE NAME] for [SYSTEM NAME] to [MISSION OBJECTIVE].**
 >
 > **System Context**: [Brief system overview relevant to this ticket]
 >
@@ -176,42 +182,134 @@ git tag vX.Y.Z && git push origin main --tags
 >
 > **Success Criteria**: You will know you're successful when [specific measurable outcomes]
 
-## Technical Details
+## Technical Requirements
 
-### Key Files
+### Implementation Details
 
-**Create:**
-```
-src/[component].ts         # [Purpose from punchlist]
-src/[component].test.ts    # [Test coverage needed]
-```
-
-**Modify:**
-```
-src/existing.ts            # Lines [X-Y]: [What to change]
-  - Current: [What exists now]
-  - Update: [What needs to change]
-```
-
-### Implementation Approach
-
-[Technical approach based on punchlist tasks and source analysis]
-
-**Architecture Pattern:**
-- Follow patterns in `src/[reference-file].ts`
-- Maintain compatibility with [existing components]
-- Use [specific design pattern] for [reason]
+[Detailed technical specifications including:]
+- Specific algorithms or business logic to implement
+- Data structures and schemas required
+- API endpoints and their specifications
+- Configuration requirements
+- Integration patterns with existing components
 
 **Constraints:**
-- MUST [requirement from punchlist]
+- MUST [absolute requirement]
 - MUST NOT [prohibition] because [reason]
-- SHOULD [recommendation]
+- SHOULD [strong recommendation]
+- MAY [optional enhancement]
 
-### Source References
+### Key Components
+
+[List 3-5 major components/classes to implement with brief descriptions]
+
+## Required Context Files
+
+[List specific files the AI must read to understand existing patterns]
 ```
-File: /path/to/file.ts
-Lines: [X-Y] - [Current implementation to build on]
-Lines: [A-B] - [Integration point]
+- `path/to/existing_component.py` (lines X-Y) - [What patterns to learn]
+- `path/to/configuration.json` - [Configuration structure]
+- `docs/architecture_guide.md` - [System architecture]
+```
+
+## Implementation Files
+
+### Primary Files to Create/Modify
+```
+src/
+├── component_name.py          # Main implementation (CREATE/MODIFY lines X-Y)
+├── extensions/
+│   └── specific_extension.py  # Supporting logic (CREATE)
+├── config/
+│   └── component_config.json  # Configuration (CREATE)
+└── tests/
+    └── test_component.py      # Integration tests (CREATE)
+```
+
+### Core Interfaces
+
+| Class | Responsibility | Key Methods |
+|-------|---------------|-------------|
+| `ClassName` | [Purpose] | `method1()`, `method2()` |
+
+**Note:** Follow patterns in `/path/to/reference.py` (lines X-Y)
+
+### Configuration Schema (if applicable)
+```json
+{
+  "[component]": {
+    "[setting_category]": {
+      "[setting_name]": "[default_value]"
+    }
+  }
+}
+```
+
+### Database Schema Updates (if applicable)
+```sql
+-- [Description of database changes]
+CREATE TABLE IF NOT EXISTS [table_name] (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    [field_name] [field_type] [constraints]
+);
+```
+
+### Integration Points
+
+- **Component A**: [How to integrate and interfaces to use]
+- **Component B**: [Required modifications]
+- **Configuration**: [How to update configs]
+
+## Acceptance Criteria
+
+### Functional Requirements
+- [ ] [Specific functional requirement - measurable]
+- [ ] [Another functional requirement]
+- [ ] [Integration requirement with existing system]
+
+### Technical Requirements
+- [ ] [Code quality/architecture requirement]
+- [ ] [Testing coverage requirement]
+- [ ] [Error handling requirement]
+
+### Performance Requirements (if applicable)
+- [ ] [Response time with specific metrics]
+- [ ] [Throughput with specific metrics]
+
+## Testing Requirements
+
+### Real Integration Testing Philosophy
+**IMPORTANT**: Follow real integration tests that exercise actual components. Avoid mocking where possible.
+
+### Unit Testing
+```python
+def test_[component_name]_[functionality]():
+    """Test [specific functionality]"""
+    component = [ComponentClass]([real_parameters])
+    result = await component.[method_name]([real_test_data])
+    assert result.[property] == [expected_value]
+```
+
+### Integration Testing
+```bash
+# 1. Start prerequisite services
+uv run [prerequisite_service] --port [port]
+
+# 2. Start the implemented component
+uv run [component_script] --[relevant_flags]
+
+# 3. Test basic functionality
+curl [test_endpoint]
+
+# 4. Verify integration
+[verification_command]
+```
+
+### Test Commands
+```bash
+cd feat-[XXX]
+[test_runner] -- --grep "[component]"
+[linter]
 ```
 
 ## Success Metrics
@@ -219,9 +317,11 @@ Lines: [A-B] - [Integration point]
 ### Functional Success
 - **[Metric 1]**: [Specific measurable outcome with target]
 - **[Metric 2]**: [Another measurable outcome]
+- **[Integration Metric]**: [How well it integrates]
 
 ### Performance Success
 - **[Performance Metric]**: [Speed/efficiency target]
+- **[Reliability Metric]**: [Uptime/error rate target]
 
 ## Risk Considerations
 
@@ -231,18 +331,50 @@ Lines: [A-B] - [Integration point]
 ### Technical Risks
 - **[Technical Risk]**: [Description] - *Mitigation*: [Technical solution]
 
-## Testing
+### Integration Risks
+- **[Integration Risk]**: [How this might break existing functionality] - *Mitigation*: [Prevention strategy]
 
-### Test Commands
-```bash
-cd feat-[XXX]
-npm test -- --grep "[component]"
-npm run lint
+## Reference Materials
+
+### External Documentation
+- **[Technology/Framework]**: [Relevant documentation links]
+
+### Internal Patterns
+- **[Pattern Type]**: See `[reference_file.py]` (lines X-Y) for examples
+
+### Dependencies
+```python
+dependencies = [
+    "[package]>=[version]",
+]
 ```
 
-### Coverage Requirements
-- Minimum: 80% line coverage
-- Critical paths: 90% branch coverage
+## Expected Outcomes
+
+### Immediate Outcomes
+- **[Outcome 1]**: [Specific deliverable]
+- **[Outcome 2]**: [Another deliverable]
+
+### Enabling Outcomes
+This ticket enables future work on:
+- **[Future Capability]**: [What this makes possible]
+
+---
+
+## AI Implementation Checklist
+
+When implementing this issue, ensure you:
+
+1. **Read Context Files**: Study all referenced files to understand existing patterns
+2. **Follow Architecture**: Maintain consistency with existing system design
+3. **Create Feature Worktree**: Start work in dedicated worktree (`feat-XXX/`)
+4. **Use Real Testing**: Implement integration tests with real components
+5. **Document Decisions**: Comment code clearly
+6. **Commit Regularly**: Make clear, incremental commits
+7. **Validate Integration**: Ensure seamless integration with existing components
+8. **Test Thoroughly**: Execute all test commands before PR
+9. **Performance Check**: Validate success metrics are met
+10. **PR with Context**: Create PR referencing "Closes #[ISSUE-NUM]"
 
 ---
 **Source**: PUNCHLIST_00[X].md Phase [N]
