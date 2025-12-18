@@ -76,28 +76,25 @@ fi
 if [ -d ".git" ] && [ -d ".claude" ]; then
   echo "Converting cloned sprint-template to worktree structure..."
 
-  # Template files already exist at root - no need to copy
-  # Just convert .git to .bare and create worktrees
+  # Template files already exist at root - keep them there
+  # We'll create NEW orphan branches for worktrees (not from existing main)
 
   # Convert .git to .bare
   mv .git .bare
   git -C .bare config core.bare true
 
-  # Create branches
-  git --git-dir=.bare branch dev main 2>/dev/null || true
-  git --git-dir=.bare branch test main 2>/dev/null || true
-
-  # Create empty main worktree with .gitkeep
-  git --git-dir=.bare worktree add main main
+  # Create empty orphan main branch with just .gitkeep
+  git -C .bare worktree add main --orphan -b main
   touch main/.gitkeep
   git -C main add .gitkeep
-  git -C main commit -m "Initialize main worktree" 2>/dev/null || true
+  git -C main commit -m "Initialize main worktree"
 
-  # Create empty dev worktree
-  git --git-dir=.bare worktree add dev dev
-  touch dev/.gitkeep
-  git -C dev add .gitkeep
-  git -C dev commit -m "Initialize dev worktree" 2>/dev/null || true
+  # Create dev branch from main (also just .gitkeep)
+  git -C .bare branch dev main
+  git -C .bare worktree add dev dev
+
+  # Create test branch
+  git -C .bare branch test main
 
   # Create .git pointer at root
   echo "gitdir: ./.bare" > .git
