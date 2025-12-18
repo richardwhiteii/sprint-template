@@ -81,35 +81,27 @@ Full disclosure: Claude is still prone to gaslighting occasionally. It'll tell y
 
 Three options depending on your situation:
 
-**Option A: `/project-init` Command (Recommended)**
+**Option A: Clone + Init (Recommended)**
 
-Install the `/project-init` command once, then bootstrap any number of projects:
-
-```bash
-# One-time setup: add project-init to your global commands
-mkdir -p ~/.claude/commands
-curl -o ~/.claude/commands/project-init.md \
-  https://raw.githubusercontent.com/richardwhiteii/sprint-template/main/.claude/commands/project-init.md
-```
-
-Now create projects with full worktree structure:
+Clone the template, then run `/project-init` to get the full worktree structure:
 
 ```bash
 mkdir my-new-app && cd my-new-app
-claude                                      # Open Claude first
+git clone https://github.com/richardwhiteii/sprint-template.git .
+claude
 /project-init my-new-app                    # Local only
 /project-init richardwhiteii/my-new-app     # + private GitHub repo
 ```
 
-This fetches the template and creates:
+This converts the clone to:
 ```
 my-new-app/
 ├── .bare/      # Bare git repository (shared data)
-├── .claude/    # Sprint agents & commands
 ├── main/       # Production worktree (stable releases)
+│   └── .claude/, CLAUDE.md, etc.
 ├── dev/        # Development worktree (work here)
-├── CLAUDE.md   # Project instructions (edit this)
-└── README-GIT.md
+│   └── .claude/, CLAUDE.md, etc.
+└── .git        # Pointer to .bare
 ```
 
 Start working:
@@ -118,9 +110,9 @@ cd dev
 claude
 ```
 
-**Option B: Clone directly (Quick Start)**
+**Option B: Clone only (Quick Start)**
 
-Clone the template into a new project directory:
+Skip the worktree setup if you just want to explore:
 
 ```bash
 mkdir my-new-app && cd my-new-app
@@ -128,7 +120,7 @@ git clone https://github.com/richardwhiteii/sprint-template.git .
 claude
 ```
 
-This gives you the agents and commands immediately, but without the bare repo + worktree structure. Good for exploring or simpler projects.
+Standard git, no worktrees. Good for simpler projects.
 
 **Option C: Add to existing project**
 
