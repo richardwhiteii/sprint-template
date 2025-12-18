@@ -77,18 +77,18 @@ claude
 
 Claude will read the `CLAUDE.md` file and understand the sprint workflow, agents, and git structure. You're ready to start building.
 
-**Option B: Fresh project with `/project-init` (Full Setup)**
+**Option B: Bootstrap with `/project-init` (No Clone Required)**
 
-This option sets up the bare repo + worktree structure for more advanced git workflows. First, grab the project-init command:
+If you want to create multiple projects without cloning each time, install the `/project-init` command once to your global commands folder. This command fetches the template and sets up the bare repo + worktree structure automatically:
 
 ```bash
-# Download project-init.md to your global commands
+# One-time setup: add project-init to your global commands
 mkdir -p ~/.claude/commands
 curl -o ~/.claude/commands/project-init.md \
   https://raw.githubusercontent.com/richardwhiteii/sprint-template/main/.claude/commands/project-init.md
 ```
 
-Then use it to bootstrap new projects:
+Now you can bootstrap any number of new projects:
 
 ```bash
 mkdir my-new-app && cd my-new-app
@@ -97,7 +97,7 @@ claude                                      # Open Claude first
 /project-init richardwhiteii/my-new-app     # Creates private GitHub repo
 ```
 
-This creates the bare repo + worktree structure (`.bare/`, `main/`, `dev/`), pulls in all agents and commands, and optionally creates your GitHub repo (private by default).
+This fetches the template, creates the bare repo + worktree structure (`.bare/`, `main/`, `dev/`), and optionally creates your GitHub repo (private by default). Use this option when you want the advanced git workflow with separate worktrees for main and dev.
 
 **Option C: Add to existing project**
 
