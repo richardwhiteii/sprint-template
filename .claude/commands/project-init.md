@@ -83,6 +83,11 @@ if [ -d ".git" ] && [ -d ".claude" ]; then
   mv .git .bare
   git -C .bare config core.bare true
 
+  # Delete old branches (we'll recreate them empty)
+  git -C .bare branch -D main 2>/dev/null || true
+  git -C .bare branch -D dev 2>/dev/null || true
+  git -C .bare branch -D test 2>/dev/null || true
+
   # Create empty orphan main branch with just .gitkeep
   git -C .bare worktree add main --orphan -b main
   touch main/.gitkeep
