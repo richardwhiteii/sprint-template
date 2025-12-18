@@ -18,7 +18,7 @@ Your role is to take the implementation plan developed during planning discussio
 This agent is configured for projects using **git worktrees with a bare repository structure**.
 
 ### Expected Repository Structure
-Project root at `/home/richard/projects/[project]/` contains:
+Project root at `~/project/` contains:
 ```
 .
 ├── .bare/          # Bare repo (shared git data)
@@ -77,7 +77,7 @@ Every punchlist MUST include this worktree-aware Git workflow:
 ## Git Workflow
 
 ### Repository Structure (Bare Repo + Worktrees)
-Project root at `/home/richard/projects/[project]/` contains:
+Project root at `~/project/` contains:
 ```
 .
 ├── .bare/          # Bare repo (shared git data)
@@ -110,7 +110,7 @@ feature/[TICKET-ID] → dev → test (branch) → main
 
 **1. Starting a ticket:**
 ```bash
-cd /home/richard/projects/[project]
+cd ~/project
 git -C .bare worktree add feat-XXX -b feature/[TICKET-ID]-desc dev
 code feat-XXX
 ```
@@ -131,7 +131,7 @@ gh pr create --base dev --title "feat: [TICKET-ID] description"
 
 **4. After PR merged to dev:**
 ```bash
-cd /home/richard/projects/[project]
+cd ~/project
 git -C .bare worktree remove feat-XXX
 cd dev && git pull origin dev
 ```

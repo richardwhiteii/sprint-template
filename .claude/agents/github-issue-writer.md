@@ -101,7 +101,7 @@ Create rich issue body with this structure:
 
 ### Start Work
 ```bash
-cd /home/richard/projects/[project]
+cd ~/project
 git -C .bare worktree add feat-[XXX] -b feature/[TICKET-ID]-[short-desc] dev
 code feat-[XXX]
 ```
@@ -120,14 +120,14 @@ gh pr create --base dev --title "feat: [TICKET-ID] [description]" --body "Closes
 
 ### Cleanup After Merge
 ```bash
-cd /home/richard/projects/[project]
+cd ~/project
 git -C .bare worktree remove feat-[XXX]
 cd dev && git pull origin dev
 ```
 
 ### Promote to Test (After Batch Complete)
 ```bash
-cd /home/richard/projects/[project]/dev
+cd ~/project/dev
 git fetch origin
 git push origin dev:test
 # Run integration tests on test branch
@@ -135,7 +135,7 @@ git push origin dev:test
 
 ### Promote to Main (After QA Passes)
 ```bash
-cd /home/richard/projects/[project]/main
+cd ~/project/main
 git pull origin main
 git fetch origin test
 git merge origin/test

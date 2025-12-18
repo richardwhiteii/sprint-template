@@ -23,7 +23,7 @@ The sprint init command creates the necessary configuration and infrastructure f
 Sprint initialization reads from the punchlist files in the dev worktree:
 
 **Repository Structure:**
-Project root at `/home/richard/projects/[project]/` contains:
+Project root at `~/project/` contains:
 ```
 .
 ├── .bare/          # Bare repo (shared git data)
