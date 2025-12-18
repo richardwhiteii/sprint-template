@@ -79,7 +79,7 @@ Full disclosure: Claude is still prone to gaslighting occasionally. It'll tell y
 
 ### Installation
 
-Two options depending on your situation:
+Three options depending on your situation:
 
 **Option A: `/project-init` Command (Recommended)**
 
@@ -118,7 +118,19 @@ cd dev
 claude
 ```
 
-**Option B: Add to existing project**
+**Option B: Clone directly (Quick Start)**
+
+Clone the template into a new project directory:
+
+```bash
+mkdir my-new-app && cd my-new-app
+git clone https://github.com/richardwhiteii/sprint-template.git .
+claude
+```
+
+This gives you the agents and commands immediately, but without the bare repo + worktree structure. Good for exploring or simpler projects.
+
+**Option C: Add to existing project**
 
 Already have a project? Copy the sprint workflow into it:
 
