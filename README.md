@@ -79,48 +79,11 @@ Full disclosure: Claude is still prone to gaslighting occasionally. It'll tell y
 
 ### Installation
 
-Three options depending on your situation:
+Two options depending on your situation:
 
-**Option A: Clone + Setup (Recommended)**
+**Option A: `/project-init` Command (Recommended)**
 
-Clone the template and run setup to get the full bare repo + worktree structure:
-
-```bash
-# Clone the template
-git clone https://github.com/richardwhiteii/sprint-template.git ~/projects/my-new-app
-cd ~/projects/my-new-app
-
-# Run setup to create worktree structure
-./setup.sh
-```
-
-This creates:
-```
-my-new-app/
-├── .bare/      # Bare git repository (shared data)
-├── .git        # Points to .bare
-├── main/       # Production worktree (stable releases)
-│   ├── .claude/
-│   ├── CLAUDE.md
-│   └── README.md
-└── dev/        # Development worktree (active work)
-    ├── .claude/
-    ├── CLAUDE.md
-    └── README.md
-```
-
-Start working in the dev worktree:
-
-```bash
-cd dev
-claude
-```
-
-Claude reads `CLAUDE.md` and understands the sprint workflow, agents, and git structure. You're ready to start building.
-
-**Option B: Bootstrap with `/project-init` (No Clone Required)**
-
-If you want to create multiple projects without cloning each time, install the `/project-init` command once to your global commands folder. This command fetches the template and sets up the bare repo + worktree structure automatically:
+Install the `/project-init` command once, then bootstrap any number of projects:
 
 ```bash
 # One-time setup: add project-init to your global commands
@@ -129,18 +92,33 @@ curl -o ~/.claude/commands/project-init.md \
   https://raw.githubusercontent.com/richardwhiteii/sprint-template/main/.claude/commands/project-init.md
 ```
 
-Now you can bootstrap any number of new projects:
+Now create projects with full worktree structure:
 
 ```bash
 mkdir my-new-app && cd my-new-app
 claude                                      # Open Claude first
 /project-init my-new-app                    # Local only
-/project-init richardwhiteii/my-new-app     # Creates private GitHub repo
+/project-init richardwhiteii/my-new-app     # + private GitHub repo
 ```
 
-This fetches the template, creates the bare repo + worktree structure (`.bare/`, `main/`, `dev/`), and optionally creates your GitHub repo (private by default). Use this option when you want the advanced git workflow with separate worktrees for main and dev.
+This fetches the template and creates:
+```
+my-new-app/
+├── .bare/      # Bare git repository (shared data)
+├── .claude/    # Sprint agents & commands
+├── main/       # Production worktree (stable releases)
+├── dev/        # Development worktree (work here)
+├── CLAUDE.md   # Project instructions (edit this)
+└── README-GIT.md
+```
 
-**Option C: Add to existing project**
+Start working:
+```bash
+cd dev
+claude
+```
+
+**Option B: Add to existing project**
 
 Already have a project? Copy the sprint workflow into it:
 
