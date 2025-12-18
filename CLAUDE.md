@@ -14,6 +14,16 @@
 
 ---
 
+## Chain of Draft
+
+When solving complex problems requiring multi-step reasoning, use "chain of draft" thinking: break down the problem step-by-step like chain-of-thought, but keep each reasoning step concise and minimal (aim for ~5 words per step). Focus only on essential calculations, transformations, or key insights needed to progress toward the solution. Avoid unnecessary elaboration or contextual details.
+
+**Example**: `"20 - x = 12; x = 8"` instead of `"To find how many Jason gave to Denny, we subtract the remaining lollipops from the initial amount..."`
+
+This approach significantly reduces token usage while maintaining reasoning quality.
+
+---
+
 ## Git Workflow
 
 This project uses a **bare repository with worktrees**.
@@ -140,6 +150,47 @@ src/
 | API integrations | `adapters/` |
 | Service orchestration | `application/` |
 | Dependency injection | `main/` |
+
+### Start Simple, Grow Safely
+
+In early stages, the project **may** begin with a small number of files to enable rapid progress. This exception **only applies** until refactor triggers are met.
+
+### Mandatory Refactor Triggers
+
+A refactor **must** occur immediately if **any** of these conditions are met:
+
+- A file exceeds **~500 lines** of code
+- A file contains **more than one primary responsibility** or domain concept
+- Changes to unrelated behaviors require modifying the same file
+- A file becomes a shared dumping ground (misc/common/utils behavior)
+
+When triggered:
+- Split code into **cohesive, concept-focused modules**
+- Prefer **many small files** over large, multi-purpose files
+- Preserve hexagonal boundaries (domain / application / ports / adapters)
+
+### Anti-Monolith Rule
+
+The system **must not** contain "god files" such as:
+- `domain.py` / `domain.ts`
+- `services.py` / `services.ts`
+- `ports.py` / `ports.ts`
+- `adapters.py` / `adapters.ts`
+
+Files **must** represent a single domain concept, use case, or integration boundary.
+
+### Domain Packaging
+
+Domain code **must not** live indefinitely in a single catch-all file. Decompose by concept:
+
+| Concept | Example File |
+|---------|--------------|
+| Entities / Aggregates | `user.py`, `order.ts` |
+| Value Objects | `email.py`, `money.ts` |
+| Policies / Specifications | `password_policy.py` |
+| Domain Errors | `errors.py`, `exceptions.ts` |
+
+Each domain file should have **one primary reason to change**.
 
 ---
 
