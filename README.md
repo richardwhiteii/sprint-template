@@ -34,8 +34,9 @@ After breaking this a few times, I learned that Claude needs structure. Not just
 │   ├── codescan.md              # Analyzes codebase before implementation
 │   ├── codebase-auditor.md      # Audits issues against actual code
 │   └── sidecar-sprint-builder.md # Creates remediation sprints
-│
-└── commands/         # 5 slash commands
+
+└── commands/         # Slash commands
+    ├── project-init.md    # Initialize new project with worktree structure
     ├── sprint.md          # Main sprint runner (/sprint 1, /sprint 2, etc.)
     ├── sprint-init.md     # Initialize sprint config and milestones
     ├── sprint-help.md     # Documentation and examples
@@ -79,11 +80,11 @@ Full disclosure: Claude is still prone to gaslighting occasionally. It'll tell y
 
 ### Installation
 
-Three options depending on your situation:
+Two options depending on your situation:
 
-**Option A: Clone + Init (Recommended)**
+**Option A: New Project (Recommended)**
 
-Clone the template, then run `/project-init` to get the full worktree structure:
+Clone the template and run `/project-init` to set up the full worktree structure:
 
 ```bash
 mkdir my-new-app && cd my-new-app
@@ -93,7 +94,7 @@ claude
 /project-init richardwhiteii/my-new-app     # + private GitHub repo
 ```
 
-This converts the clone to:
+This converts the clone to a bare repo + worktree structure:
 ```
 my-new-app/
 ├── .bare/      # Bare git repository (shared data)
@@ -110,19 +111,7 @@ cd dev
 claude
 ```
 
-**Option B: Clone only (Quick Start)**
-
-Skip the worktree setup if you just want to explore:
-
-```bash
-mkdir my-new-app && cd my-new-app
-git clone https://github.com/richardwhiteii/sprint-template.git .
-claude
-```
-
-Standard git, no worktrees. Good for simpler projects.
-
-**Option C: Add to existing project**
+**Option B: Add to Existing Project**
 
 Already have a project? Copy the sprint workflow into it:
 
@@ -185,12 +174,13 @@ Why this structure? After accidentally pushing broken code to main more times th
 
 You work in `dev/`, merge to `main/` when stable. The agents understand this flow and will create feature branches off dev, merge PRs back to dev, and only touch main when you explicitly promote.
 
-See `README-GIT.md` for the full workflow details.
+The `/project-init` command handles all of this setup automatically. See `README-GIT.md` for the full workflow details.
 
 ## Sprint Commands
 
 | Command | What It Does |
 |---------|--------------|
+| `/project-init` | Convert clone to worktree structure |
 | `/sprint init` | Creates config, GitHub milestones |
 | `/sprint 1` | Runs phase 1 of your punchlist |
 | `/sprint 2` | Runs phase 2, and so on |
