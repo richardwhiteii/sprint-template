@@ -80,28 +80,24 @@ Full disclosure: Claude is still prone to gaslighting occasionally. It'll tell y
 
 ### Installation
 
-Two options depending on your situation:
+**Option 1: New Project**
 
-**Option A: New Project (Recommended)**
-
-Clone the template and run `/project-init` to set up the full worktree structure:
+Start fresh with the full worktree structure:
 
 ```bash
-mkdir my-new-app && cd my-new-app
+mkdir my-project && cd my-project
 git clone https://github.com/richardwhiteii/sprint-template.git .
 claude
-/project-init my-new-app                    # Local only
-/project-init richardwhiteii/my-new-app     # + private GitHub repo
+/project-init my-project
 ```
 
-This converts the clone to a bare repo + worktree structure:
+That's it. The `/project-init` command detects you cloned the sprint-template and automatically converts it to a bare repo with worktrees:
+
 ```
-my-new-app/
+my-project/
 ├── .bare/      # Bare git repository (shared data)
 ├── main/       # Production worktree (stable releases)
-│   └── .claude/, CLAUDE.md, etc.
 ├── dev/        # Development worktree (work here)
-│   └── .claude/, CLAUDE.md, etc.
 └── .git        # Pointer to .bare
 ```
 
@@ -111,9 +107,9 @@ cd dev
 claude
 ```
 
-**Option B: Add to Existing Project**
+**Option 2: Existing Project**
 
-Already have a project? Copy the sprint workflow into it:
+Already have a project? Just copy the `.claude/` folder:
 
 ```bash
 cd your-project
@@ -124,7 +120,6 @@ rm -rf /tmp/sprint-template
 ```
 
 Then open Claude in your project root:
-
 ```bash
 claude
 ```
