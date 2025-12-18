@@ -14,20 +14,49 @@ After breaking this a few times, I learned that Claude needs structure. Not just
 
 ```
 .claude/
-├── agents/           # 8 specialized agents
-│   ├── punchlist-builder.md     # Turns ideas into structured task lists
-│   ├── github-issue-writer.md   # Creates detailed GitHub issues from punchlist
-│   ├── git-agent.md             # Handles commits, branches, PRs
+├── agents/           # 14 specialized agents
+│   │
+│   │ # Product → Code Pipeline
+│   ├── product-manager.md       # Extracts ideas into detailed product docs (start here)
+│   ├── punchlist-builder.md     # Turns product docs into structured task lists
+│   ├── github-issue-writer.md   # Creates AI-ready GitHub issues from punchlist
+│   ├── ticket-writer.md         # Creates local tickets for one-off work
+│   │
+│   │ # Development Agents
+│   ├── git-agent.md             # Handles commits, branches, PRs, worktrees
 │   ├── test-runner-agent.md     # Runs tests, captures failures, coordinates fixes
 │   ├── qa-agent.md              # Verifies acceptance criteria, closes issues
 │   ├── orchestrator-agent.md    # Drives the full pipeline
+│   │
+│   │ # Quality & Architecture
+│   ├── hex-check.md             # Audits hexagonal architecture compliance
+│   ├── hex-fix.md               # Fixes architecture violations
+│   ├── codescan.md              # Analyzes codebase before implementation
 │   ├── codebase-auditor.md      # Audits issues against actual code
 │   └── sidecar-sprint-builder.md # Creates remediation sprints
-└── commands/         # 4 slash commands
+│
+└── commands/         # 5 slash commands
     ├── sprint.md          # Main sprint runner (/sprint 1, /sprint 2, etc.)
     ├── sprint-init.md     # Initialize sprint config and milestones
     ├── sprint-help.md     # Documentation and examples
-    └── audit.md           # Run codebase audits
+    ├── audit.md           # Run codebase audits
+    └── continue.md        # Resume work across sessions
+```
+
+### The Full Pipeline
+
+```
+You have an idea
+       ↓
+product-manager ──→ Detailed Product Doc
+       ↓
+punchlist-builder ──→ PUNCHLIST.md (phases, tasks, estimates)
+       ↓
+github-issue-writer ──→ GitHub Issues (AI-ready, parallel creation)
+       ↓
+orchestrator ──→ Code, Tests, PRs (automated sprint execution)
+       ↓
+qa-agent ──→ Verify & Close Issues
 ```
 
 Plus project scaffolding:
@@ -121,20 +150,30 @@ claude
 
 1. **Edit CLAUDE.md** - Add your tech stack, project rules, and any anti-patterns to avoid. This is where you tell Claude how your project works.
 
-2. **Create a punchlist** - Either manually write `PUNCHLIST.md` or use the punchlist-builder agent:
+2. **Start with an idea** - If you have a vague idea that needs fleshing out, use the product-manager agent:
+   ```
+   I want to build a CLI tool that helps developers manage their dotfiles
+   ```
+   The agent will ask probing questions and produce a detailed product document.
+
+3. **Create a punchlist** - Use the punchlist-builder agent on your product doc (or describe the feature directly):
+   ```
+   Create a punchlist from ./docs/product/dotfiles-manager-product-doc.md
+   ```
+   Or if you already know what you want:
    ```
    I need a user authentication system with email/password login,
    session management, and password reset flow.
    ```
    The agent will structure this into phases with specific tasks.
 
-3. **Initialize the sprint**:
+4. **Initialize the sprint**:
    ```
    /sprint init
    ```
    This creates `.sprint-config.json` and sets up GitHub milestones.
 
-4. **Run your first phase**:
+5. **Run your first phase**:
    ```
    /sprint 1
    ```
