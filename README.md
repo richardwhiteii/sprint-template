@@ -50,11 +50,36 @@ Full disclosure: Claude is still prone to gaslighting occasionally. It'll tell y
 
 ### Installation
 
-Two options depending on where you're starting:
+Three options depending on your situation:
 
-**Option A: Fresh project with `/project-init`**
+**Option A: Clone directly (Quickest Start)**
 
-First, grab the project-init command and drop it in your commands folder:
+Clone the template directly into your new project directory. The second argument to `git clone` specifies the destination folder name:
+
+```bash
+# From anywhere - full path
+git clone https://github.com/richardwhiteii/sprint-template.git ~/projects/my-new-app
+
+# From ~/projects - relative path
+cd ~/projects
+git clone https://github.com/richardwhiteii/sprint-template.git my-new-app
+
+# Shallow clone (faster, no git history)
+git clone --depth 1 https://github.com/richardwhiteii/sprint-template.git ~/projects/my-new-app
+```
+
+After cloning, open Claude Code at the root of your new project:
+
+```bash
+cd ~/projects/my-new-app
+claude
+```
+
+Claude will read the `CLAUDE.md` file and understand the sprint workflow, agents, and git structure. You're ready to start building.
+
+**Option B: Fresh project with `/project-init` (Full Setup)**
+
+This option sets up the bare repo + worktree structure for more advanced git workflows. First, grab the project-init command:
 
 ```bash
 # Download project-init.md to your global commands
@@ -67,20 +92,29 @@ Then use it to bootstrap new projects:
 
 ```bash
 mkdir my-new-app && cd my-new-app
+claude                                      # Open Claude first
 /project-init my-new-app                    # Local only
 /project-init richardwhiteii/my-new-app     # Creates private GitHub repo
 ```
 
-This sets up the bare repo + worktree structure, pulls in all agents and commands, and optionally creates your GitHub repo (private by default).
+This creates the bare repo + worktree structure (`.bare/`, `main/`, `dev/`), pulls in all agents and commands, and optionally creates your GitHub repo (private by default).
 
-**Option B: Add to existing project**
+**Option C: Add to existing project**
+
+Already have a project? Copy the sprint workflow into it:
 
 ```bash
 cd your-project
-git clone https://github.com/richardwhiteii/sprint-template.git /tmp/sprint-template
+git clone --depth 1 https://github.com/richardwhiteii/sprint-template.git /tmp/sprint-template
 cp -r /tmp/sprint-template/.claude .
 cp /tmp/sprint-template/CLAUDE.md .
 rm -rf /tmp/sprint-template
+```
+
+Then open Claude in your project root:
+
+```bash
+claude
 ```
 
 ### First Sprint
