@@ -88,7 +88,7 @@ Start fresh with the full worktree structure:
 mkdir my-project && cd my-project
 git clone https://github.com/richardwhiteii/sprint-template.git .
 claude
-/project-init my-project
+/project-init
 ```
 
 That's it. The `/project-init` command detects you cloned the sprint-template and automatically converts it to a bare repo with worktrees:
