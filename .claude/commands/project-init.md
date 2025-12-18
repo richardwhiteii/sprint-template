@@ -22,14 +22,14 @@ Handles three scenarios:
 
 **A) Cloned sprint-template** (has `.git` + `.claude`):
 - Converts existing `.git` to `.bare`
-- Creates main/dev worktrees
-- Copies template files to worktrees
+- Creates main/dev worktrees (empty, for project code)
+- Keeps template files at root (not in worktrees)
 
 **B) Fresh empty directory**:
 - Fetches sprint template from GitHub
 - Creates bare repo with main/dev/test branches
-- Creates main and dev worktrees
-- Commits template files
+- Creates main and dev worktrees (empty)
+- Keeps template files at root
 
 **C) Existing non-template repo** (has `.git` only):
 - Exits with error - use Option C from README instead
@@ -76,12 +76,8 @@ fi
 if [ -d ".git" ] && [ -d ".claude" ]; then
   echo "Converting cloned sprint-template to worktree structure..."
 
-  # Save template files
-  TEMP_DIR=$(mktemp -d)
-  cp -r .claude "$TEMP_DIR/"
-  cp CLAUDE.md "$TEMP_DIR/" 2>/dev/null || true
-  cp README-GIT.md "$TEMP_DIR/" 2>/dev/null || true
-  cp README.md "$TEMP_DIR/" 2>/dev/null || true
+  # Template files already exist at root - no need to copy
+  # Just convert .git to .bare and create worktrees
 
   # Convert .git to .bare
   mv .git .bare
@@ -91,31 +87,20 @@ if [ -d ".git" ] && [ -d ".claude" ]; then
   git --git-dir=.bare branch dev main 2>/dev/null || true
   git --git-dir=.bare branch test main 2>/dev/null || true
 
-  # Create main worktree
+  # Create empty main worktree with .gitkeep
   git --git-dir=.bare worktree add main main
+  touch main/.gitkeep
+  git -C main add .gitkeep
+  git -C main commit -m "Initialize main worktree" 2>/dev/null || true
 
-  # Create dev worktree
+  # Create empty dev worktree
   git --git-dir=.bare worktree add dev dev
-
-  # Copy template files to worktrees
-  cp -r "$TEMP_DIR/.claude" main/
-  cp "$TEMP_DIR/CLAUDE.md" main/ 2>/dev/null || true
-  cp "$TEMP_DIR/README-GIT.md" main/ 2>/dev/null || true
-  cp "$TEMP_DIR/README.md" main/ 2>/dev/null || true
-
-  cp -r "$TEMP_DIR/.claude" dev/
-  cp "$TEMP_DIR/CLAUDE.md" dev/ 2>/dev/null || true
-  cp "$TEMP_DIR/README-GIT.md" dev/ 2>/dev/null || true
-  cp "$TEMP_DIR/README.md" dev/ 2>/dev/null || true
-
-  # Clean up root (keep only structure)
-  rm -rf .claude CLAUDE.md README-GIT.md README.md 2>/dev/null || true
+  touch dev/.gitkeep
+  git -C dev add .gitkeep
+  git -C dev commit -m "Initialize dev worktree" 2>/dev/null || true
 
   # Create .git pointer at root
   echo "gitdir: ./.bare" > .git
-
-  # Cleanup temp
-  rm -rf "$TEMP_DIR"
 
 elif [ -d ".git" ]; then
   echo "Error: Existing git repository (not sprint-template)"
@@ -128,40 +113,30 @@ else
   git clone --depth 1 "$TEMPLATE_REPO" "$TEMPLATE_TMP"
   rm -rf "$TEMPLATE_TMP/.git"
 
+  # Copy template files to project root
+  echo "Copying template files to root..."
+  cp -r "$TEMPLATE_TMP/.claude" "$PROJECT_ROOT/"
+  cp "$TEMPLATE_TMP/CLAUDE.md" "$PROJECT_ROOT/"
+  cp "$TEMPLATE_TMP/README-GIT.md" "$PROJECT_ROOT/"
+  cp "$TEMPLATE_TMP/README.md" "$PROJECT_ROOT/" 2>/dev/null || true
+
   # Create bare repo and set default branch
   echo "Creating bare repo..."
   git init --bare "$PROJECT_ROOT/.bare"
   echo "ref: refs/heads/main" > "$PROJECT_ROOT/.bare/HEAD"
 
-  # Create main worktree with orphan branch
+  # Create main worktree with orphan branch (empty)
   git -C "$PROJECT_ROOT/.bare" worktree add "$PROJECT_ROOT/main" --orphan -b main
+  touch "$PROJECT_ROOT/main/.gitkeep"
+  git -C "$PROJECT_ROOT/main" add .gitkeep
+  git -C "$PROJECT_ROOT/main" commit -m "Initialize main worktree"
 
-  # Create initial commit
-  git -C "$PROJECT_ROOT/main" commit --allow-empty -m "Initial commit"
-
-  # Create dev branch and worktree
+  # Create dev branch and worktree (empty)
   git -C "$PROJECT_ROOT/.bare" branch dev main
   git -C "$PROJECT_ROOT/.bare" worktree add "$PROJECT_ROOT/dev" dev
 
   # Create test branch (no worktree)
   git -C "$PROJECT_ROOT/.bare" branch test main
-
-  # Copy template files to project root
-  echo "Copying template files..."
-  cp -r "$TEMPLATE_TMP/.claude" "$PROJECT_ROOT/"
-  cp "$TEMPLATE_TMP/CLAUDE.md" "$PROJECT_ROOT/"
-  cp "$TEMPLATE_TMP/README-GIT.md" "$PROJECT_ROOT/"
-
-  # Copy into main worktree and commit
-  cp -r "$TEMPLATE_TMP/.claude" "$PROJECT_ROOT/main/"
-  cp "$TEMPLATE_TMP/CLAUDE.md" "$PROJECT_ROOT/main/"
-  cp "$TEMPLATE_TMP/README-GIT.md" "$PROJECT_ROOT/main/"
-
-  git -C "$PROJECT_ROOT/main" add .claude CLAUDE.md README-GIT.md
-  git -C "$PROJECT_ROOT/main" commit -m "Add sprint workflow and project config"
-
-  # Sync dev with main
-  git -C "$PROJECT_ROOT/dev" merge main --no-edit
 
   # Cleanup temp
   rm -rf "$TEMPLATE_TMP"
@@ -181,12 +156,14 @@ echo ""
 echo "Project initialized: $PROJECT_NAME"
 echo ""
 echo "Structure:"
-echo "  .bare/           # Bare repo"
-echo "  .claude/         # Sprint agents & commands"
-echo "  main/            # Worktree -> main"
-echo "  dev/             # Worktree -> dev"
-echo "  CLAUDE.md        # Project instructions"
-echo "  README-GIT.md    # Git workflow"
+echo "  $PROJECT_ROOT/"
+echo "  ├── .bare/           # Bare repo (shared git data)"
+echo "  ├── .claude/         # Sprint agents & commands (AT ROOT)"
+echo "  ├── .git             # Pointer to .bare"
+echo "  ├── CLAUDE.md        # Project instructions (AT ROOT)"
+echo "  ├── README-GIT.md    # Git workflow docs (AT ROOT)"
+echo "  ├── main/            # Worktree -> main (PROJECT CODE ONLY)"
+echo "  └── dev/             # Worktree -> dev (PROJECT CODE ONLY)"
 echo ""
 echo "Next steps:"
 echo "  1. Edit CLAUDE.md with project details"
@@ -199,15 +176,18 @@ echo "  5. /sprint 1"
 ## Result Structure
 
 ```
-./                      # Current directory
+./                      # Current directory (launch Claude from HERE)
 ├── .bare/              # Bare git repo
-├── .claude/
+├── .claude/            # AT ROOT (not in worktrees)
 │   ├── agents/         # Sprint agents
 │   └── commands/       # /sprint, /sprint-init, etc.
-├── main/               # Worktree -> main branch
-├── dev/                # Worktree -> dev branch
-├── CLAUDE.md           # Project instructions (edit this)
-└── README-GIT.md       # Git workflow docs
+├── .git                # Pointer to .bare
+├── CLAUDE.md           # AT ROOT (edit this)
+├── README-GIT.md       # AT ROOT
+├── main/               # Worktree -> main (PROJECT CODE ONLY)
+│   └── .gitkeep        # Empty initially
+└── dev/                # Worktree -> dev (PROJECT CODE ONLY)
+    └── .gitkeep        # Empty initially
 ```
 
 ## After Init
