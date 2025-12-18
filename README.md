@@ -81,30 +81,42 @@ Full disclosure: Claude is still prone to gaslighting occasionally. It'll tell y
 
 Three options depending on your situation:
 
-**Option A: Clone directly (Quickest Start)**
+**Option A: Clone + Setup (Recommended)**
 
-Clone the template directly into your new project directory. The second argument to `git clone` specifies the destination folder name:
+Clone the template and run setup to get the full bare repo + worktree structure:
 
 ```bash
-# From anywhere - full path
+# Clone the template
 git clone https://github.com/richardwhiteii/sprint-template.git ~/projects/my-new-app
+cd ~/projects/my-new-app
 
-# From ~/projects - relative path
-cd ~/projects
-git clone https://github.com/richardwhiteii/sprint-template.git my-new-app
-
-# Shallow clone (faster, no git history)
-git clone --depth 1 https://github.com/richardwhiteii/sprint-template.git ~/projects/my-new-app
+# Run setup to create worktree structure
+./setup.sh
 ```
 
-After cloning, open Claude Code at the root of your new project:
+This creates:
+```
+my-new-app/
+├── .bare/      # Bare git repository (shared data)
+├── .git        # Points to .bare
+├── main/       # Production worktree (stable releases)
+│   ├── .claude/
+│   ├── CLAUDE.md
+│   └── README.md
+└── dev/        # Development worktree (active work)
+    ├── .claude/
+    ├── CLAUDE.md
+    └── README.md
+```
+
+Start working in the dev worktree:
 
 ```bash
-cd ~/projects/my-new-app
+cd dev
 claude
 ```
 
-Claude will read the `CLAUDE.md` file and understand the sprint workflow, agents, and git structure. You're ready to start building.
+Claude reads `CLAUDE.md` and understands the sprint workflow, agents, and git structure. You're ready to start building.
 
 **Option B: Bootstrap with `/project-init` (No Clone Required)**
 
