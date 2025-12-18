@@ -5,15 +5,15 @@ Initialize the current directory with bare repo + worktrees + sprint workflow.
 ## Usage
 
 ```
-/project-init <project-name>
-/project-init <owner/repo>
+/project-init                # Uses current directory name
+/project-init owner/repo     # Also creates GitHub repo (private)
 ```
 
 **Examples:**
 ```bash
 mkdir my-app && cd my-app
-/project-init my-app              # Local only
-/project-init owner/my-app        # With GitHub remote
+/project-init                     # Infers "my-app" from directory
+/project-init owner/my-app        # Also creates GitHub remote
 ```
 
 ## What This Command Does
@@ -53,20 +53,16 @@ ARG="$1"
 TEMPLATE_TMP="/tmp/hyphae-template-$$"
 TEMPLATE_REPO="https://github.com/richardwhiteii/sprint-template.git"
 
-# Parse argument: "owner/repo" or just "project-name"
+# Parse argument: "owner/repo" or use current directory name
 if [[ "$ARG" == *"/"* ]]; then
   GITHUB_REPO="$ARG"
   PROJECT_NAME=$(basename "$ARG")
-else
+elif [ -n "$ARG" ]; then
   GITHUB_REPO=""
   PROJECT_NAME="$ARG"
-fi
-
-# Validate
-if [ -z "$PROJECT_NAME" ]; then
-  echo "Error: Project name required"
-  echo "Usage: /project-init <project-name> or /project-init <owner/repo>"
-  exit 1
+else
+  GITHUB_REPO=""
+  PROJECT_NAME=$(basename "$PROJECT_ROOT")
 fi
 
 # Check if already has worktree structure
