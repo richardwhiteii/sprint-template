@@ -89,14 +89,14 @@ if [ -d ".git" ] && [ -d ".claude" ]; then
   git -C .bare branch -D test 2>/dev/null || true
 
   # Create empty orphan main branch with just .gitkeep
-  git -C .bare worktree add main --orphan -b main
-  touch main/.gitkeep
-  git -C main add .gitkeep
-  git -C main commit -m "Initialize main worktree"
+  git -C .bare worktree add "$PROJECT_ROOT/main" --orphan -b main
+  touch "$PROJECT_ROOT/main/.gitkeep"
+  git -C "$PROJECT_ROOT/main" add .gitkeep
+  git -C "$PROJECT_ROOT/main" commit -m "Initialize main worktree"
 
   # Create dev branch from main (also just .gitkeep)
   git -C .bare branch dev main
-  git -C .bare worktree add dev dev
+  git -C .bare worktree add "$PROJECT_ROOT/dev" dev
 
   # Create test branch
   git -C .bare branch test main
