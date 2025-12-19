@@ -83,6 +83,9 @@ if [ -d ".git" ] && [ -d ".claude" ]; then
   mv .git .bare
   git -C .bare config core.bare true
 
+  # Remove origin to prevent pushing to template repo
+  git --git-dir=.bare remote remove origin 2>/dev/null || true
+
   # Delete old branches (we'll recreate them empty)
   git -C .bare branch -D main 2>/dev/null || true
   git -C .bare branch -D dev 2>/dev/null || true
@@ -166,6 +169,12 @@ echo "  ├── CLAUDE.md        # Project instructions (AT ROOT)"
 echo "  ├── README-GIT.md    # Git workflow docs (AT ROOT)"
 echo "  ├── main/            # Worktree -> main (PROJECT CODE ONLY)"
 echo "  └── dev/             # Worktree -> dev (PROJECT CODE ONLY)"
+if [ -z "$GITHUB_REPO" ]; then
+  echo ""
+  echo "To connect to your own repository:"
+  echo "  git -C .bare remote add origin https://github.com/YOUR-USERNAME/YOUR-REPO.git"
+  echo "  git push -u origin main"
+fi
 echo ""
 echo "Next steps:"
 echo "  1. Edit CLAUDE.md with project details"
